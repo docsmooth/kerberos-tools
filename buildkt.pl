@@ -10,7 +10,6 @@ my $kvno=shift;
 my $password = join("", @ARGV);
 
 $realm=uc($realm);
-
 open(my $kt, ">", "$ktfile") || die "can't open $ktfile for writing! $!";
 
 print $kt "clear_list\n";
@@ -25,27 +24,21 @@ foreach my $kvn (($kvno, $kvno-1)) {
 foreach my $enc (@enctypes) {
     foreach my $domain ((uc($dom), lc($dom))) {
         foreach my $user ((uc($usr), lc($usr))) {
-            print $kt "addent -password -p $user/$domain\@$realm -k $kvno -e $enc\n";
+            print $kt "addent -password -p $user/$domain\@$domain -k $kvn -e $enc\n";
             print $kt "$password\n";
-            print $kt "addent -password -p $user/".lc($domain)."\@$realm -k $kvno -e $enc\n";
+            print $kt "addent -password -p $user/".lc($domain)."\@$domain -k $kvn -e $enc\n";
             print $kt "$password\n";
-            print $kt "addent -password -p $user/$domain\@$realm -k $kvno -e $enc -s $salt\n";
+            print $kt "addent -password -p $user/$domain\@$domain -k $kvn -e $enc -s $salt\n";
             print $kt "$password\n";
-            print $kt "addent -password -p $user/".lc($domain)."\@$realm -k $kvno -e $enc -s $salt\n";
+            print $kt "addent -password -p $user/".lc($domain)."\@$domain -k $kvn -e $enc -s $salt\n";
             print $kt "$password\n";
-            print $kt "addent -password -p $user\@$realm -k $kvno -e $enc\n";
+            print $kt "addent -password -p $user\@$domain -k $kvn -e $enc\n";
             print $kt "$password\n";
-            print $kt "addent -password -p $user\@$realm -k $kvno -e $enc -s $salt\n";
-            print $kt "$password\n";
-            print $kt "addent -password -p $usr\@$realm -k $kvno -e $enc\n";
-            print $kt "$password\n";
-            print $kt "addent -password -p $usr\@$realm -k $kvno -e $enc -s $salt\n";
+            print $kt "addent -password -p $user\@$domain -k $kvn -e $enc -s $salt\n";
             print $kt "$password\n";
         }
     }
-    print $kt "addent -password -p $upn -k $kvno -e $enc -s $salt\n";
-    print $kt "$password\n";
-    print $kt "addent -password -p $usr -k $kvno -e $enc\n";
+    print $kt "addent -password -p $upn -k $kvn -e $enc\n";
     print $kt "$password\n";
 }}
 print $kt "write_kt $ktfile.keytab\n";
